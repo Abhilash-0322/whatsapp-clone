@@ -1,18 +1,12 @@
 import { Server as NetServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 import { verifyToken } from './auth';
 import { IUser } from '@/models/User';
 import User from '@/models/User';
 
 export interface SocketServer extends NetServer {
   io?: SocketIOServer;
-}
-
-export interface NextApiResponseWithSocket extends NextApiResponse {
-  socket: {
-    server: SocketServer;
-  };
 }
 
 export interface AuthenticatedSocket {
