@@ -200,17 +200,10 @@ export default function ChatList({
   };
 
   const getOtherParticipant = (conversation: Conversation) => {
-    // Defensive: handle both populated and unpopulated participants
-    const others = (conversation.participants || []).filter(
-      (p: any) =>
-        p &&
-        ((typeof p === 'object' && p._id && p._id !== currentUser._id) ||
-         (typeof p === 'string' && p !== currentUser._id))
-    );
-    if (others.length === 0) return null;
-    // If populated, return the object; if not, return a stub
-    if (typeof others[0] === 'object') return others[0];
-    return { _id: others[0], name: 'Unknown', avatar: '', isOnline: false };
+    // Always return the user who is not the current user
+    return (conversation.participants || []).filter(
+      (p: any) => p && p._id && String(p._id) !== String(currentUser._id)
+    )[0] || null;
   };
 
   if (loading) {
@@ -417,7 +410,10 @@ export default function ChatList({
           })
           .map((conversation) => {
             const otherParticipant = getOtherParticipant(conversation);
-            if (!otherParticipant) return null;
+            if (!otherParticipant) {
+              console.warn('No other participant found for conversation:', conversation);
+              return null;
+            }
 
             return (
               <div

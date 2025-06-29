@@ -28,7 +28,11 @@ export async function GET(request: NextRequest) {
     }
 
     const conversation = await Conversation.findById(conversationId)
-      .populate('participants', 'name email avatar isOnline lastSeen');
+      .populate('participants', 'name email avatar isOnline lastSeen')
+      .populate({
+        path: 'lastMessage',
+        populate: { path: 'sender', select: 'name avatar isOnline' }
+      });
 
     if (!conversation) {
       return NextResponse.json({ error: 'Conversation not found' }, { status: 404 });

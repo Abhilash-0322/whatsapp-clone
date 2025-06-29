@@ -50,9 +50,9 @@ export default function ChatWindow({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Find the other participant (not the current user)
-  const otherParticipant = (conversation.participants || []).find(
-    (p) => p && p._id && p._id !== currentUser._id
-  );
+  const otherParticipant = (conversation.participants || []).filter(
+    (p) => p && p._id && String(p._id) !== String(currentUser._id)
+  )[0];
 
   if (!otherParticipant) {
     return (
